@@ -74,8 +74,9 @@ class Fib extends Component {
   render() {
     return (
       <div className="App">
+        <h1>Fibonacci Calculator</h1>
         <form onSubmit={this.handleSubmit}>
-          <label>Enter your index:</label>
+          <label>Index: </label>
           <input
             autoFocus
             value={this.state.index}

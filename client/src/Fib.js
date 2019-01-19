@@ -13,14 +13,24 @@ class Fib extends Component {
     this.fetchIndexes();
   }
 
-  handleSubmit = async (e) => {
-    console.log('Submit!')
+  handleSubmit = async e => {
+    console.log('Submit!');
     e.preventDefault();
 
-    await axios.post('/api/values', {
-      index: this.state.index
-    })
-  }
+    try {
+      await axios.post('/api/values', {
+        index: this.state.index
+      });
+      this.setState({
+        index: ''
+      });
+
+      this.fetchValues();
+      this.fetchIndexes();
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
 
   async fetchValues() {
     const values = await axios.get('/api/values/current');
@@ -44,14 +54,21 @@ class Fib extends Component {
   renderValues() {
     const entries = [];
     const { values } = this.state;
-    for (let key in this.state.values) {
-      entries.push(
-        <div key={key}>
-          For index {key} I calculated {values[key]}
-        </div>
-      );
-    }
-    return entries;
+    return (
+      <table className="result-table">
+        <tbody>
+          {Object.keys(values).map(key => {
+            return (
+              <tr key={key}>
+                <td>{key}</td>
+                <td>=></td>
+                <td>{values[key]}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    );
   }
 
   render() {
@@ -60,6 +77,7 @@ class Fib extends Component {
         <form onSubmit={this.handleSubmit}>
           <label>Enter your index:</label>
           <input
+            autoFocus
             value={this.state.index}
             onChange={e => {
               this.setState({ index: e.target.value });

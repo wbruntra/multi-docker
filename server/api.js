@@ -34,7 +34,7 @@ router.get('/values/all', async (req, res) => {
 router.get('/values/current', async (req, res) => {
   redisClient.hgetall('values', (err, values) => {
     if (err) {
-      console.log(err)
+      console.log(err);
     }
     res.send(values);
   });
@@ -43,7 +43,7 @@ router.get('/values/current', async (req, res) => {
 router.post('/values', async (req, res) => {
   const index = parseInt(req.body.index);
   if (index > 40) {
-    return res.status(422).send('Index too high');
+    return res.status(422).send({ err: 'Index too high' });
   }
   redisClient.hset('values', index, 'Nothing yet!');
   redisPublisher.publish('insert', index);
